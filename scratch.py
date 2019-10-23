@@ -27,7 +27,14 @@
 # test.name()
 
 
-dictTest = {"LIST.SCRIPTS": "mystuff", "Jomama.SCRIPTS": "AnotherOne"}
+# dictTest = {"LIST.SCRIPTS": "mystuff", "Jomama.SCRIPTS": "AnotherOne"}
 
-if "LIST.SCRIPTS" in dictTest:
-    print("oh my god!")
+# if "LIST.SCRIPTS" in dictTest:
+#     print("oh my god!")
+from webHttp.UrlHandler import UrlHandler
+
+def testCreate(classToCreate):
+    obj = classToCreate()
+    obj.handleUrl()
+
+testCreate(UrlHandler)

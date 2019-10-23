@@ -34,8 +34,14 @@ class ResponseHandler(Thread):
                     #Check if we have a registered url handler for this request
                     
                     pageRequest = requestedFile[1:].upper()
+                    
+                    if pageRequest.find('?'):
+                        # Has a querystring, so strip it and check if there is a url handler for this type
+                        pageRequest = pageRequest[:pageRequest.find('?')]
+
                     if pageRequest in self.urlHandlers:
-                        hcObj = globals()[self.urlHandlers[pageRequest]]
+                        hcObj = self.urlHandlers[pageRequest]()
+                        argumentsDict = {}
                         
                         if pageRequest == "LIST.SCRIPT":
                             # Built in list handler, needs filePath
@@ -60,20 +66,17 @@ class ResponseHandler(Thread):
                             logging.debug("File %s not found" %(sys.exc_info()[1]))
 
                     conn.send(str.encode(f'HTTP/1.1 200 OK\nContent-Type: text/html\n\n{pageContents}'))
-                    break
+                break
                                             
     def run(self):
         __RESPONSE_TERMINATOR = b'\r\n\r\n'
         __RECIEVE_BUFFER = 1024
 
-        fullResponse = ''
-        doLoop = True
-
         try:
+            doLoop = True
+            fullResponse = ''
             while doLoop:
                 data = self.clientConn.recv(__RECIEVE_BUFFER)
-                
-                #Maybe add to a list and use .join?
                 fullResponse += data.decode("utf-8")
 
                 if data[-4:] == __RESPONSE_TERMINATOR:
@@ -95,7 +98,7 @@ class ResponseHandler(Thread):
         try:
             offset = url.find('?')
             if offset > 0:
-                queryStringArr = str(url[offset+1:]).split('&')
+                queryStringArr = str(url[offset + 1:]).split('&')
                 for p in queryStringArr:
                     f = str(p).split('=')
                     paramDict[f[0]] = f[1]

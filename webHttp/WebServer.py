@@ -4,6 +4,7 @@ import argparse
 import logging
 from threading import Thread
 from webHttp.ResponseHandler import ResponseHandler
+from webHttp.UrlHandler import UrlHandler
 
 class WebServer(Thread):
     """ A simple web server implimentation """
@@ -16,7 +17,7 @@ class WebServer(Thread):
         self.port = port
         self.__urlHandlers = {}
 
-        self.registerUrl("list", "UrlHandler")
+        self.registerUrl("list", UrlHandler)
         
         Thread.__init__(self)
 
@@ -59,8 +60,8 @@ class WebServer(Thread):
         ----------
         url : str
             Url base for your custom script. To invoke you would call "http://{webserver}:{port}.SCRIPT"
-        urlHandlerClass : string
-            String name of a derived class of urlHandler to invoke your custom code. You most override the handleUrl method
+        urlHandlerClass : class
+            Derived class of urlHandler to invoke your custom code. handleUrl method will be invoked when the url is hit.
 
         """
         
