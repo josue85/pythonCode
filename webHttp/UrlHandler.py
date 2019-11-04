@@ -8,7 +8,7 @@ class UrlHandler:
     #Argument names and values will be based on the query string of the url and passed in as keyword arguments
     def handleUrl(self, params):
         """
-        Method called when your registered url is hit. Pa
+        Method called when your registered url is hit.
 
 
         Parameters
